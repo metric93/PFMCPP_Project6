@@ -4,6 +4,8 @@
 
 Create a branch named Part1
 
+Purpose:  This project will show you the difference between member functions and static class functions, as well as the difference between pointers and references and the code semantics that accompany pointers and references.
+
  Pointers
 
  Please look at the screenshot in the files to see what happens if you paste this assignment into an existing cpp file in an xcode project
@@ -51,7 +53,9 @@ Create a branch named Part1
  
  Commit your changes by clicking on the Source Control panel on the left, entering a message, and click [Commit and push].
  
- Send me the the link to your repl.it in a DM on Slack
+Make a pull request after you make your first commit and pin the pull request link to our DM thread.
+
+send me a DM to check your pull request
 
  Wait for my code review.
  */
