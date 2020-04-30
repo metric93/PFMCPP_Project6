@@ -64,14 +64,20 @@ send me a DM to check your pull request
 #include <string>
 struct T
 {
-    T(<#type name#> v, const char* <#variable name#>)   //1
-    //2
-    //3
+    //Initialize "value" and "name" 
+    float value;
+    std::string name;
+
+    //Constructs that assigns Constructor Parameters to variables above
+    T(int v, const char* myName) :  //1
+    value (v), //2
+    name (myName)//3
+    {};
 };
 
-struct <#structName1#>                                //4
+struct MyCompare                                //4
 {
-    <#type name#> compare(<#type name#> a, <#type name#> b) //5
+    T* compare(T* a, T* b) //5
     {
         if( a->value < b->value ) return a;
         if( a->value > b->value ) return b;
