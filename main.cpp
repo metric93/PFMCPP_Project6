@@ -68,26 +68,26 @@ struct T
     float value;
     std::string name;
 
-    //Constructs that assigns Constructor Parameters to variables above
-    T(int v, const char* myName) :  //1
-    value (v), //2
+    T(int v, const char* myName) :  //1 //Constructs that assigns Constructor Parameters to variables above
+    value (v), //2 
     name (myName)//3
     {};
 };
 
-struct MyCompare                                //4
+struct CompareFunc                                //4
 {
     T* compare(T* a, T* b) //5
     {
-        if( a->value < b->value ) return a;
+        //Compare the Value (float type) from the two Pointers and return the smaller one
+        if( a->value < b->value ) return a; //compare the two value contained in the pointers to Type "T" created above
         if( a->value > b->value ) return b;
-        return nullptr;
+        return nullptr; //if none of the if statements matched return a nullptr
     }
 };
 
 struct U
 {
-    float <#name1#> { 0 }, <#name2#> { 0 };
+    float MyTOne { 0 }, MyTTwo { 0 };
     <#returnType#> <#memberFunction#>(<#type name#>* <#updatedValue#>)      //12
     {
         
@@ -98,30 +98,39 @@ struct <#structname2#>
 {
     static <#returntype#> <#staticFunctionA#>(U* that, <#type name#>* <#updatedValue#> )        //10
     {
-        std::cout << "U's <#name1#> value: " << that-><#name1#> << std::endl;
-        that-><#name1#> = <#updatedValue#>;
-        std::cout << "U's <#name1#> updated value: " << that-><#name1#> << std::endl;
-        while( std::abs(that-><#name2#> - that-><#name1#>) > 0.001f )
+        std::cout << "U's MyTOne value: " << that->MyTOne << std::endl;
+        that->MyTOne = <#updatedValue#>;
+        std::cout << "U's MyTOne updated value: " << that->MyTOne << std::endl;
+        while( std::abs(that->MyTTwo - that->MyTOne) > 0.001f )
         {
             /*
-             write something that makes the distance between that-><#name2#> and that-><#name1#> get smaller
+             write something that makes the distance between that->MyTTwo and that->MyTOne get smaller
              */
-            that-><#name2#> += ;
+            that->MyTTwo += ;
         }
-        std::cout << "U's <#name2#> updated value: " << that-><#name2#> << std::endl;
-        return that-><#name2#> * that-><#name1#>;
+        std::cout << "U's MyTTwo updated value: " << that->MyTTwo << std::endl;
+        return that->MyTTwo * that->MyTOne;
     }
 };
         
 int main()
 {
-    T <#name1#>( , );                                             //6
-    T <#name2#>( , );                                             //6
+    T MyTOne( 5 , "thefirstT" );                                             //6
+    T MyTTwo( 2 , "thesecondT" );                                             //6
     
-    <#structName1#> f;                                            //7
-    auto* smaller = f.compare( , );                              //8
-    std::cout << "the smaller one is << " << smaller->name << std::endl; //9
-    
+    CompareFunc f;                                            //7
+    //Using the Adress of Operator to match the functions arguments which are two Pointers to the Type "T" (created via struct)
+    //Assignig to a Pointer (type "auto") as the Function outputs the adress of a Pointer to Type "T"
+    auto* smaller = f.compare( &MyTOne , &MyTTwo);                              //8
+    //Fetch the Name Value from the pointed to Adress, as nullptr is a valid return from the function make an if statment to detect it
+    if (smaller == nullptr) //9
+    {
+        std::cout << "Nullpointer Detected" << std::endl;
+    }
+    else
+    {
+        std::cout << "the smaller one is << " << smaller->name << std::endl; 
+    }
     U <#name3#>;
     float updatedValue = 5.f;
     std::cout << "[static func] <#name3#>'s multiplied values: " << <#structname2#>::<#staticFunctionA#>( , ) << std::endl;                  //11
