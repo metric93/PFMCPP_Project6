@@ -71,7 +71,7 @@ struct T
     T(int v, const char* myName) :  //1 //Constructs that assigns Constructor Parameters to variables above
     value (v), //2 
     name (myName)//3
-    {};
+    {}
 };
 
 struct CompareFunc                                //4
@@ -87,41 +87,57 @@ struct CompareFunc                                //4
 
 struct U
 {
-    float MyTOne { 0 }, MyTTwo { 0 };
-    <#returnType#> <#memberFunction#>(<#type name#>* <#updatedValue#>)      //12
+    U(){std::cout << "U Type has been instantaiated" << std::endl;}
+    
+    float uValueOne { 0 }, uValueTwo { 0 };
+
+    float updateLogic(float* newValue)      //12
     {
-        
+        if (newValue == nullptr)
+        {
+            std::cout<<"Detected Nullpointer!" << std::endl;
+            return this->uValueOne * this->uValueTwo; //in this case we use this-> in order to point to the Value of the Instantation that the function belongs to
+        }
+
+        while( std::abs(this->uValueOne - this->uValueTwo) > 0.001f)
+        {
+            this->uValueTwo += -0.1f ;
+        }
+        std::cout << "U's uValueTwo updated value: " << this->uValueTwo << std::endl;
+        return this->uValueTwo * this->uValueOne;
     }
 };
 
-struct <#structname2#>
+struct MyUpdater
 {
-    static <#returntype#> <#staticFunctionA#>(U* that, <#type name#>* <#updatedValue#> )        //10
+    static float updateLogic(U* that, float* newValue )        //10
     {
-        std::cout << "U's MyTOne value: " << that->MyTOne << std::endl;
-        that->MyTOne = <#updatedValue#>;
-        std::cout << "U's MyTOne updated value: " << that->MyTOne << std::endl;
-        while( std::abs(that->MyTTwo - that->MyTOne) > 0.001f )
-        {
+        std::cout << "U's uValueOne value: " << that->uValueOne << std::endl;
+        that->uValueOne = *newValue; //Acess the uValueOne float that is part of the Pointer to a Type U* named that
+        std::cout << "U's uValueOne updated value: " << that->uValueOne << std::endl;
+        while( std::abs(that->uValueTwo - that->uValueOne) > 0.001f )
+        {    
             /*
-             write something that makes the distance between that->MyTTwo and that->MyTOne get smaller
+             write something that makes the distance between that->uValueTwo and that->uValueOne get smaller
              */
-            that->MyTTwo += ;
+            that->uValueTwo += -0.1f ;
         }
-        std::cout << "U's MyTTwo updated value: " << that->MyTTwo << std::endl;
-        return that->MyTTwo * that->MyTOne;
+        std::cout << "U's uValueTwo updated value: " << that->uValueTwo << std::endl;
+        return that->uValueTwo * that->uValueOne;
     }
 };
         
 int main()
 {
-    T MyTOne( 5 , "thefirstT" );                                             //6
-    T MyTTwo( 2 , "thesecondT" );                                             //6
+    T uValueOne( 5 , "thefirstT" );                                             //6
+    T uValueTwo( 15 , "thesecondT" );                                             //6
+
     
     CompareFunc f;                                            //7
     //Using the Adress of Operator to match the functions arguments which are two Pointers to the Type "T" (created via struct)
     //Assignig to a Pointer (type "auto") as the Function outputs the adress of a Pointer to Type "T"
-    auto* smaller = f.compare( &MyTOne , &MyTTwo);                              //8
+    auto* smaller = f.compare( &uValueOne , &uValueTwo);                              //8
+
     //Fetch the Name Value from the pointed to Adress, as nullptr is a valid return from the function make an if statment to detect it
     if (smaller == nullptr) //9
     {
@@ -131,12 +147,19 @@ int main()
     {
         std::cout << "the smaller one is << " << smaller->name << std::endl; 
     }
-    U <#name3#>;
+
+
+
+
+    //Changing the updatedValue via the function in the MyUpdate Objcet
+    U myUType;
     float updatedValue = 5.f;
-    std::cout << "[static func] <#name3#>'s multiplied values: " << <#structname2#>::<#staticFunctionA#>( , ) << std::endl;                  //11
+    std::cout << "[static func] myUType's multiplied values: " << MyUpdater::updateLogic( &myUType , &updatedValue ) << std::endl;                  //11
     
-    U <#name4#>;
-    std::cout << "[member func] <#name4#>'s multiplied values: " << <#name4#>.<#memberFunction#>( &updatedValue ) << std::endl;
+
+    //Changing the updatedValue via the function in the created object of Type U
+    //U myUTypeTwo;
+    //std::cout << "[member func] myUTypeTwo's multiplied values: " << myUTypeTwo.updateLogic( &updatedValue ) << std::endl;
 }
 
         
