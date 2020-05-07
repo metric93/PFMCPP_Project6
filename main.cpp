@@ -87,24 +87,29 @@ struct CompareFunc                                //4
 
 struct U
 {
-    U(){std::cout << "U Type has been instantaiated" << std::endl;}
+    U(){std::cout << "New Object of Type U has been created" << std::endl;}
     
-    float uValueOne { 0 }, uValueTwo { 0 };
+    float uSetPoint { 0 }, uProcessVariable { 0 };
 
     float updateLogic(float* newValue)      //12
     {
         if (newValue == nullptr)
         {
             std::cout<<"Detected Nullpointer!" << std::endl;
-            return this->uValueOne * this->uValueTwo; //in this case we use this-> in order to point to the Value of the Instantation that the function belongs to
+            return 0.0f; 
         }
 
-        while( std::abs(this->uValueOne - this->uValueTwo) > 0.001f)
+        std::cout << "U's uSetPoint value: " << this->uSetPoint << std::endl;
+        this->uSetPoint = *newValue; //Acess the uSetPoint float that is part of the Pointer to a Type U* named that
+        std::cout << "U's uSetPoint updated value: " << this->uSetPoint << std::endl;
+
+        while( std::abs(this->uSetPoint - this->uProcessVariable) > 0.001f)
         {
-            this->uValueTwo += -0.1f ;
+            this->uProcessVariable += 0.5f ;
+            std::cout << this->uProcessVariable << std::endl;
         }
-        std::cout << "U's uValueTwo updated value: " << this->uValueTwo << std::endl;
-        return this->uValueTwo * this->uValueOne;
+        std::cout << "U's uProcessVariable updated value: " << this->uProcessVariable << std::endl;
+        return this->uProcessVariable * this->uSetPoint;
     }
 };
 
@@ -112,31 +117,38 @@ struct MyUpdater
 {
     static float updateLogic(U* that, float* newValue )        //10
     {
-        std::cout << "U's uValueOne value: " << that->uValueOne << std::endl;
-        that->uValueOne = *newValue; //Acess the uValueOne float that is part of the Pointer to a Type U* named that
-        std::cout << "U's uValueOne updated value: " << that->uValueOne << std::endl;
-        while( std::abs(that->uValueTwo - that->uValueOne) > 0.001f )
+        if (newValue == nullptr)
+        {
+            std::cout<<"Detected Nullpointer!" << std::endl;
+            return 0.0f; 
+        }
+
+        std::cout << "U's uSetPoint value: " << that->uSetPoint << std::endl;
+        that->uSetPoint = *newValue; //Acess the uSetPoint float that is part of the Pointer to a Type U* named that
+        std::cout << "U's uSetPoint updated value: " << that->uSetPoint << std::endl;
+        while( std::abs(that->uProcessVariable - that->uSetPoint) > 0.001f )
         {    
             /*
-             write something that makes the distance between that->uValueTwo and that->uValueOne get smaller
+             write something that makes the distance between that->uProcessVariable and that->uSetPoint get smaller
              */
-            that->uValueTwo += -0.1f ;
+            that->uProcessVariable += 0.5f ;
+            std::cout << that->uProcessVariable << std::endl;
         }
-        std::cout << "U's uValueTwo updated value: " << that->uValueTwo << std::endl;
-        return that->uValueTwo * that->uValueOne;
+        std::cout << "U's uProcessVariable updated value: " << that->uProcessVariable << std::endl;
+        return that->uProcessVariable * that->uSetPoint;
     }
 };
         
 int main()
 {
-    T uValueOne( 5 , "thefirstT" );                                             //6
-    T uValueTwo( 15 , "thesecondT" );                                             //6
+    T uSetPoint( 5 , "thefirstT" );                                             //6
+    T uProcessVariable( 15 , "thesecondT" );                                             //6
 
     
     CompareFunc f;                                            //7
     //Using the Adress of Operator to match the functions arguments which are two Pointers to the Type "T" (created via struct)
     //Assignig to a Pointer (type "auto") as the Function outputs the adress of a Pointer to Type "T"
-    auto* smaller = f.compare( &uValueOne , &uValueTwo);                              //8
+    auto* smaller = f.compare( &uSetPoint , &uProcessVariable);                              //8
 
     //Fetch the Name Value from the pointed to Adress, as nullptr is a valid return from the function make an if statment to detect it
     if (smaller == nullptr) //9
@@ -154,12 +166,12 @@ int main()
     //Changing the updatedValue via the function in the MyUpdate Objcet
     U myUType;
     float updatedValue = 5.f;
-    std::cout << "[static func] myUType's multiplied values: " << MyUpdater::updateLogic( &myUType , &updatedValue ) << std::endl;                  //11
+    std::cout << "[static func] myUType's multiplied value: " << std::endl << MyUpdater::updateLogic( &myUType , &updatedValue ) << std::endl;                  //11
     
 
     //Changing the updatedValue via the function in the created object of Type U
-    //U myUTypeTwo;
-    //std::cout << "[member func] myUTypeTwo's multiplied values: " << myUTypeTwo.updateLogic( &updatedValue ) << std::endl;
+    U myUTypeTwo;
+    std::cout << "[member func] myUTypeTwo's multiplied values: " << std::endl << myUTypeTwo.updateLogic( &updatedValue ) << std::endl;
 }
 
         
