@@ -78,9 +78,12 @@ struct CompareFunc                                //4
 {
     T* compare(T* a, T* b) //5
     {
-        //Compare the Value (float type) from the two Pointers and return the smaller one
-        if( a->value < b->value ) return a; //compare the two value contained in the pointers to Type "T" created above
-        if( a->value > b->value ) return b;
+        if (a != nullptr && b != nullptr)
+        {
+            //Compare the Value (float type) from the two Pointers and return the smaller one
+            if( a->value < b->value ) return a; //compare the two value contained in the    pointers to Type "T" created above
+            if( a->value > b->value ) return b;
+        }
         return nullptr; //if none of the if statements matched return a nullptr
     }
 };
@@ -117,25 +120,28 @@ struct MyUpdater
 {
     static float updateLogic(U* that, float* newValue )        //10
     {
-        if (newValue == nullptr)
+        if (newValue == nullptr && newValue == nullptr)
         {
             std::cout<<"Detected Nullpointer!" << std::endl;
-            return 0.0f; 
         }
 
-        std::cout << "U's uSetPoint value: " << that->uSetPoint << std::endl;
-        that->uSetPoint = *newValue; //Acess the uSetPoint float that is part of the Pointer to a Type U* named that
-        std::cout << "U's uSetPoint updated value: " << that->uSetPoint << std::endl;
-        while( std::abs(that->uProcessVariable - that->uSetPoint) > 0.001f )
-        {    
-            /*
-             write something that makes the distance between that->uProcessVariable and that->uSetPoint get smaller
-             */
-            that->uProcessVariable += 0.5f ;
-            std::cout << that->uProcessVariable << std::endl;
+        if (that != nullptr && newValue != nullptr)
+        {
+            std::cout << "U's uSetPoint value: " << that->uSetPoint << std::endl;
+            that->uSetPoint = *newValue; //Acess the uSetPoint float that is part of the Pointer to a Type U* named that
+            std::cout << "U's uSetPoint updated value: " << that->uSetPoint << std::endl;
+            while( std::abs(that->uProcessVariable - that->uSetPoint) > 0.001f )
+            {    
+                /*
+                write something that makes the distance between that->uProcessVariable and that->uSetPoint get smaller
+                */
+                that->uProcessVariable += 0.5f ;
+                std::cout << that->uProcessVariable << std::endl;
+            }
+            std::cout << "U's uProcessVariable updated value: " << that->uProcessVariable << std::endl;
+            return that->uProcessVariable * that->uSetPoint;
         }
-        std::cout << "U's uProcessVariable updated value: " << that->uProcessVariable << std::endl;
-        return that->uProcessVariable * that->uSetPoint;
+        return 0.0f; //returns 0.0f if a nullponter was detected
     }
 };
         
