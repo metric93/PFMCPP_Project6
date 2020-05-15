@@ -98,7 +98,7 @@ struct U
     {
         if (newValue == nullptr)
         {
-            std::cout<<"Detected Nullpointer!" << std::endl;
+            std::cout << "Detected Nullpointer!" << std::endl;
             return 0.0f; 
         }
 
@@ -120,28 +120,26 @@ struct MyUpdater
 {
     static float updateLogic(U* that, float* newValue )        //10
     {
-        if (newValue == nullptr && newValue == nullptr)
+        if (that == nullptr && newValue == nullptr)
         {
-            std::cout<<"Detected Nullpointer!" << std::endl;
+            std::cout << "Detected Nullpointer!" << std::endl;
+            return 0.0f; //returns 0.0f if a nullponter was detected
         }
 
-        if (that != nullptr && newValue != nullptr)
-        {
-            std::cout << "U's uSetPoint value: " << that->uSetPoint << std::endl;
-            that->uSetPoint = *newValue; //Acess the uSetPoint float that is part of the Pointer to a Type U* named that
-            std::cout << "U's uSetPoint updated value: " << that->uSetPoint << std::endl;
-            while( std::abs(that->uProcessVariable - that->uSetPoint) > 0.001f )
-            {    
-                /*
-                write something that makes the distance between that->uProcessVariable and that->uSetPoint get smaller
-                */
-                that->uProcessVariable += 0.5f ;
-                std::cout << that->uProcessVariable << std::endl;
-            }
-            std::cout << "U's uProcessVariable updated value: " << that->uProcessVariable << std::endl;
-            return that->uProcessVariable * that->uSetPoint;
+        std::cout << "U's uSetPoint value: " << that->uSetPoint << std::endl;
+        that->uSetPoint = *newValue; //Acess the uSetPoint float that is part of the Pointer to a Type U* named that
+        std::cout << "U's uSetPoint updated value: " << that->uSetPoint << std::endl;
+        while( std::abs(that->uProcessVariable - that->uSetPoint) > 0.001f )
+        {    
+            /*
+            write something that makes the distance between that->uProcessVariable and that->uSetPoint get smaller
+            */
+            that->uProcessVariable += 0.5f ;
+            std::cout << that->uProcessVariable << std::endl;
         }
-        return 0.0f; //returns 0.0f if a nullponter was detected
+        std::cout << "U's uProcessVariable updated value: " << that->uProcessVariable << std::endl;
+        return that->uProcessVariable * that->uSetPoint;
+        
     }
 };
         
