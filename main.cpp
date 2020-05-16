@@ -120,7 +120,13 @@ struct MyUpdater
 {
     static float updateLogic(U* that, float* newValue )        //10
     {
-        if (that == nullptr && newValue == nullptr)
+        if (that == nullptr)
+        {
+            std::cout << "Detected Nullpointer!" << std::endl;
+            return 0.0f; //returns 0.0f if a nullponter was detected
+        }
+
+        else if (newValue == nullptr)
         {
             std::cout << "Detected Nullpointer!" << std::endl;
             return 0.0f; //returns 0.0f if a nullponter was detected
