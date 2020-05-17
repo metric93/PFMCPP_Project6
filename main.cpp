@@ -64,64 +64,118 @@ send me a DM to check your pull request
 #include <string>
 struct T
 {
-    T(<#type name#> v, const char* <#variable name#>)   //1
-    //2
-    //3
+    //Initialize "value" and "name" 
+    float value;
+    std::string name;
+
+    T(int v, const char* myName) :  //1 //Constructs that assigns Constructor Parameters to variables above
+    value (v), //2 
+    name (myName)//3
+    {}
 };
 
-struct <#structName1#>                                //4
+struct CompareFunc                                //4
 {
-    <#type name#> compare(<#type name#> a, <#type name#> b) //5
+    T* compare(T* a, T* b) //5
     {
-        if( a->value < b->value ) return a;
-        if( a->value > b->value ) return b;
-        return nullptr;
+        if (a != nullptr && b != nullptr)
+        {
+            //Compare the Value (float type) from the two Pointers and return the smaller one
+            if( a->value < b->value ) return a; //compare the two value contained in the    pointers to Type "T" created above
+            if( a->value > b->value ) return b;
+        }
+        return nullptr; //if none of the if statements matched return a nullptr
     }
 };
 
 struct U
 {
-    float <#name1#> { 0 }, <#name2#> { 0 };
-    <#returnType#> <#memberFunction#>(<#type name#>* <#updatedValue#>)      //12
+    U(){std::cout << "New Object of Type U has been created" << std::endl;}
+    
+    float uSetPoint { 0 }, uProcessVariable { 0 };
+
+    float updateLogic(float* newValue)      //12
     {
-        
+        if (newValue == nullptr)
+        {
+            std::cout << "Detected Nullpointer!" << std::endl;
+            return 0.0f; 
+        }
+
+        std::cout << "U's uSetPoint value: " << this->uSetPoint << std::endl;
+        this->uSetPoint = *newValue; //Acess the uSetPoint float that is part of the Pointer to a Type U* named that
+        std::cout << "U's uSetPoint updated value: " << this->uSetPoint << std::endl;
+
+        while( std::abs(this->uSetPoint - this->uProcessVariable) > 0.001f)
+        {
+            this->uProcessVariable += 0.5f ;
+            std::cout << this->uProcessVariable << std::endl;
+        }
+        std::cout << "U's uProcessVariable updated value: " << this->uProcessVariable << std::endl;
+        return this->uProcessVariable * this->uSetPoint;
     }
 };
 
-struct <#structname2#>
+struct MyUpdater
 {
-    static <#returntype#> <#staticFunctionA#>(U* that, <#type name#>* <#updatedValue#> )        //10
+    static float updateLogic(U* that, float* newValue )        //10
     {
-        std::cout << "U's <#name1#> value: " << that-><#name1#> << std::endl;
-        that-><#name1#> = <#updatedValue#>;
-        std::cout << "U's <#name1#> updated value: " << that-><#name1#> << std::endl;
-        while( std::abs(that-><#name2#> - that-><#name1#>) > 0.001f )
+        if (that == nullptr || newValue == nullptr)
         {
-            /*
-             write something that makes the distance between that-><#name2#> and that-><#name1#> get smaller
-             */
-            that-><#name2#> += ;
+            std::cout << "Detected Nullpointer!" << std::endl;
+            return 0.0f; //returns 0.0f if a nullponter was detected
         }
-        std::cout << "U's <#name2#> updated value: " << that-><#name2#> << std::endl;
-        return that-><#name2#> * that-><#name1#>;
+
+        std::cout << "U's uSetPoint value: " << that->uSetPoint << std::endl;
+        that->uSetPoint = *newValue; //Acess the uSetPoint float that is part of the Pointer to a Type U* named that
+        std::cout << "U's uSetPoint updated value: " << that->uSetPoint << std::endl;
+        while( std::abs(that->uProcessVariable - that->uSetPoint) > 0.001f )
+        {    
+            /*
+            write something that makes the distance between that->uProcessVariable and that->uSetPoint get smaller
+            */
+            that->uProcessVariable += 0.5f ;
+            std::cout << that->uProcessVariable << std::endl;
+        }
+        std::cout << "U's uProcessVariable updated value: " << that->uProcessVariable << std::endl;
+        return that->uProcessVariable * that->uSetPoint;
+        
     }
 };
         
 int main()
 {
-    T <#name1#>( , );                                             //6
-    T <#name2#>( , );                                             //6
+    T uSetPoint( 5 , "thefirstT" );                                             //6
+    T uProcessVariable( 15 , "thesecondT" );                                             //6
+
     
-    <#structName1#> f;                                            //7
-    auto* smaller = f.compare( , );                              //8
-    std::cout << "the smaller one is << " << smaller->name << std::endl; //9
-    
-    U <#name3#>;
+    CompareFunc f;                                            //7
+    //Using the Adress of Operator to match the functions arguments which are two Pointers to the Type "T" (created via struct)
+    //Assignig to a Pointer (type "auto") as the Function outputs the adress of a Pointer to Type "T"
+    auto* smaller = f.compare( &uSetPoint , &uProcessVariable);                              //8
+
+    //Fetch the Name Value from the pointed to Adress, as nullptr is a valid return from the function make an if statment to detect it
+    if (smaller == nullptr) //9
+    {
+        std::cout << "Nullpointer Detected" << std::endl;
+    }
+    else
+    {
+        std::cout << "the smaller one is << " << smaller->name << std::endl; 
+    }
+
+
+
+
+    //Changing the updatedValue via the function in the MyUpdate Objcet
+    U myUType;
     float updatedValue = 5.f;
-    std::cout << "[static func] <#name3#>'s multiplied values: " << <#structname2#>::<#staticFunctionA#>( , ) << std::endl;                  //11
+    std::cout << "[static func] myUType's multiplied value: " << std::endl << MyUpdater::updateLogic( &myUType , &updatedValue ) << std::endl;                  //11
     
-    U <#name4#>;
-    std::cout << "[member func] <#name4#>'s multiplied values: " << <#name4#>.<#memberFunction#>( &updatedValue ) << std::endl;
+
+    //Changing the updatedValue via the function in the created object of Type U
+    U myUTypeTwo;
+    std::cout << "[member func] myUTypeTwo's multiplied values: " << std::endl << myUTypeTwo.updateLogic( &updatedValue ) << std::endl;
 }
 
         
